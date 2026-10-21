@@ -1,0 +1,9 @@
+{
+  // Static site served from Workers static assets; no Worker code needed.
+  "name": "hakanalemdarcom",
+  "compatibility_date": "2026-10-13",
+  "assets": {
+    "directory": "./dist",
+    "not_found_handling": "404-page"
+  }
+}

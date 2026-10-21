@@ -1,0 +1,55 @@
+---
+import Base from '../layouts/Base.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import { studios, totals } from '../data/projects';
+const k = (n: number) => Math.floor(n / 1000);
+---
+<Base side="games" title="Hakan Alemdar · Producer of tabletop RPGs" description={`Co-founder and producer of tabletop RPGs: ${totals.campaigns} Kickstarter campaigns, $${k(totals.pledged)}K+ raised from ${totals.backers.toLocaleString('en-US')} backers.`}>
+  <header class="hero">
+    <div class="eyebrow">Producer · Co-founder · Istanbul &amp; New York</div>
+    <h1 transition:name="headline">Worlds from history and myth, funded by backers.</h1>
+    <p class="lede">I co-founded two studios that make tabletop roleplaying games and ran the business side: the US companies, licensing and vendor contracts, and the supply chain that got books to backers.</p>
+    <p class="actions"><a href="/">← My day job: tech law</a></p>
+  </header>
+
+  <section class="block">
+    <h2>By the numbers</h2>
+    <div>
+      <div class="stats">
+        <div class="stat"><b data-count={k(totals.pledged)} data-pre="$" data-suf="K+">${k(totals.pledged)}K+</b><span>raised on Kickstarter</span></div>
+        <div class="stat"><b data-count={totals.backers}>{totals.backers.toLocaleString('en-US')}</b><span>backers</span></div>
+        <div class="stat"><b data-count={totals.campaigns}>{totals.campaigns}</b><span>funded campaigns, all past goal</span></div>
+      </div>
+      <p class="src">Totals from the public campaign pages, October 2026.</p>
+    </div>
+  </section>
+
+  <section class="block">
+    <h2>Studios</h2>
+    <div>
+      {studios.map((s) => (
+        <div class="studio">
+          <header><h3>{s.name}</h3><span>{s.role} · {s.years} · {s.note}</span></header>
+          <div class="projects">{s.projects.map((p) => <ProjectCard p={p} />)}</div>
+        </div>
+      ))}
+    </div>
+  </section>
+</Base>
+
+<script>
+  function countUp() {
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    document.querySelectorAll<HTMLElement>('[data-count]').forEach((el) => {
+      const end = Number(el.dataset.count), pre = el.dataset.pre ?? '', suf = el.dataset.suf ?? '';
+      const t0 = performance.now();
+      const step = (t: number) => {
+        const p = Math.min(1, (t - t0) / 1200);
+        el.textContent = pre + Math.round(end * (1 - (1 - p) ** 3)).toLocaleString('en-US') + suf;
+        if (p < 1) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    });
+  }
+  document.addEventListener('astro:page-load', () => { if (document.body.dataset.side === 'games') countUp(); });
+</script>
