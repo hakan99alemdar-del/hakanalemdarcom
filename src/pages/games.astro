@@ -1,7 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import Showcase from '../components/Showcase.astro';
-import { studios, totals, crescentArt } from '../data/projects';
+import { studios, totals, stripArt } from '../data/projects';
 const k = (n: number) => Math.floor(n / 1000);
 const headline = 'Worlds from history and myth, funded by backers.';
 const partners = ['Kickstarter', 'BackerKit', 'Grim Golem', 'Grimcraft Games', 'OGEM Istanbul'];
@@ -14,19 +14,19 @@ const partners = ['Kickstarter', 'BackerKit', 'Grim Golem', 'Grimcraft Games', '
     <p class="actions"><a href="/">← My day job: tech law</a></p>
   </header>
 
-  <div class="marquee" aria-label="Key art from The City of Crescent">
+  <div class="marquee" aria-label="Key art from Historica Arcanum">
     <ul class="marquee-track">
-      {[...crescentArt, ...crescentArt].map(([slug, title], i) => (
-        <li aria-hidden={i >= crescentArt.length ? 'true' : undefined}>
-          <button type="button" class="shot" tabindex={i >= crescentArt.length ? -1 : undefined} data-full={`/art/crescent/${slug}.webp`} data-title={title} aria-label={`Open ${title}`}>
-            <img src={`/art/crescent/${slug}-sm.webp`} alt="" width="640" height="338" decoding="async">
+      {[...stripArt, ...stripArt].map(([slug, title], i) => (
+        <li aria-hidden={i >= stripArt.length ? 'true' : undefined}>
+          <button type="button" class="shot" tabindex={i >= stripArt.length ? -1 : undefined} data-full={`/art/${slug}.webp`} data-title={title} aria-label={`Open ${title}`}>
+            <img src={`/art/${slug}-sm.webp`} alt="" width="640" height="338" decoding="async">
             <span>{title}</span>
           </button>
         </li>
       ))}
     </ul>
   </div>
-  <p class="src marquee-note">Art from <em>Historica Arcanum: The City of Crescent</em>. © Metis Creative, shown with permission. Click to enlarge.</p>
+  <p class="src marquee-note">Art from <em>Historica Arcanum: The City of Crescent</em> and <em>Era of the Crusades</em>. © Metis Creative, shown with permission. Click to enlarge.</p>
 
   <section class="block">
     <h2>By the numbers</h2>

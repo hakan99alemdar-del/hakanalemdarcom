@@ -126,16 +126,16 @@ export const totals = {
   backers: funded.reduce((n, p) => n + (p.backers ?? 0), 0),
 };
 
-// Key art from Historica Arcanum: The City of Crescent (Metis Creative), shown in the gallery.
-export const crescentArt = [
-  ['lunar-eclipse', 'Lunar Eclipse'],
-  ['murder-at-pera-palace', 'Murder at Pera Palace'],
-  ['lilac-sultan', 'Lilac Sultan'],
-  ['thieves-guild', 'Thieves Guild'],
-  ['harem', 'Harem'],
-  ['the-ghost', 'The Ghost'],
-  ['the-eye-witness', 'The Eye Witness'],
-  ['the-cut', 'The Cut'],
-  ['hano-the-widow', 'Hano the Widow'],
-  ['death-of-a-mentor', 'Death of a Mentor'],
+// Key art for the strip under the games hero, picked for the warm palette.
+export const stripArt = [
+  ['crusades/era-of-the-crusades', 'Era of the Crusades'],
+  ['crescent/lunar-eclipse', 'Lunar Eclipse'],
+  ['crusades/womb-of-the-dragon', 'Womb of the Dragon'],
+  ['crescent/murder-at-pera-palace', 'Murder at Pera Palace'],
+  ['crusades/citadel-of-saladin', 'Citadel of Saladin'],
+  ['crescent/lilac-sultan', 'Lilac Sultan'],
+  ['crusades/historica-arcanum-universe', 'Historica Arcanum'],
+  ['crescent/harem', 'Harem'],
+  ['crescent/the-ghost', 'The Ghost'],
+  ['crescent/death-of-a-mentor', 'Death of a Mentor'],
 ] as const;
