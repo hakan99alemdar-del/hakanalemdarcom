@@ -48,7 +48,7 @@ a:hover { color: var(--acc-ink); }
 .half:hover .bg { transform: scale(1.04); }
 .half.games .bg { animation: drift 26s ease-in-out infinite alternate; }
 @keyframes drift { from { scale: 1.02; translate: 0 0; } to { scale: 1.1; translate: -2% -1.5%; } }
-.half .embers { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.half .embers { position: absolute; top: 0; right: 0; width: max(100%, 75vw); height: 100%; pointer-events: none; }
 .half .shade { position: absolute; inset: 0; background: linear-gradient(0deg, rgba(11,9,7,.92), rgba(11,9,7,.25) 65%); }
 .half .grid { position: absolute; inset: 0; width: 100%; height: 100%; }
 .half .who { display: flex; flex-direction: column; gap: 18px; }
