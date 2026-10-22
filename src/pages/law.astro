@@ -79,10 +79,12 @@ const latest = (await posts('law')).slice(0, 3);
     </div>
   </section>
 
+  {latest.length > 0 && (
   <section class="sec wrap" id="blog">
     <div class="sec-head rv"><h2 class="display">Writing</h2><p>Notes on data protection, AI regulation and IP. <a href="/blog">All posts →</a></p></div>
     <div class="rv"><Posts list={latest} /></div>
   </section>
+  )}
 
   <section class="sec wrap">
     <a class="bridge warm rv" href="/games">

@@ -5,13 +5,31 @@ import '@fontsource/inter/400.css';
 import '@fontsource/inter/500.css';
 import '@fontsource/inter/600.css';
 import '../styles/site.css';
+import { posts } from '../data/blog';
 
-interface Props { side: 'home' | 'law' | 'games'; title: string; description: string; page?: 'blog' | 'privacy'; }
-const { side, title, description, page } = Astro.props;
+interface Props { side: 'home' | 'law' | 'games'; title: string; description: string; page?: 'blog' | 'privacy'; image?: string; }
+const { side, title, description, page, image } = Astro.props;
+const ogImage = new URL(image ?? `/og/${side}.jpg`, Astro.site);
+// The blog link stays hidden until the first post is out.
+const hasPosts = (await posts()).length > 0;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const links = side === 'games'
   ? [['/games#studios', 'Studios'], ['/blog', 'Blog'], ['/games#contact', 'Contact']]
   : [['/law#focus', 'Focus'], ['/law#experience', 'Experience'], ['/blog', 'Blog'], ['/law#contact', 'Contact']];
+const nav = links.filter(([href]) => hasPosts || href !== '/blog');
+const person = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: 'Hakan Alemdar',
+  url: Astro.site!.href,
+  jobTitle: 'Attorney at the Istanbul Bar; LL.M. candidate in Digitalization and Law',
+  email: 'mailto:hakan99alemdar@gmail.com',
+  sameAs: ['https://www.linkedin.com/in/hakanalemdar'],
+  address: { '@type': 'PostalAddress', addressLocality: 'Frankfurt am Main', addressCountry: 'DE' },
+  affiliation: { '@type': 'CollegeOrUniversity', name: 'Julius-Maximilians-Universität Würzburg' },
+  alumniOf: { '@type': 'CollegeOrUniversity', name: 'Kocaeli University' },
+  knowsLanguage: ['tr', 'en', 'de'],
+};
 ---
 <!doctype html>
 <html lang="en">
@@ -25,17 +43,26 @@ const links = side === 'games'
   <meta property="og:description" content={description}>
   <meta property="og:type" content="profile">
   <meta property="og:url" content={canonical}>
+  <meta property="og:site_name" content="Hakan Alemdar">
+  <meta property="og:image" content={ogImage}>
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="sitemap" href="/sitemap-index.xml">
   <meta name="theme-color" content={side === 'games' ? '#0B0907' : '#0A0F1A'}>
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <script type="application/ld+json" set:html={JSON.stringify(person)} />
   <ClientRouter />
 </head>
 <body data-side={side}>
+  <a class="skip" href="#main">Skip to content</a>
   {side !== 'home' && (
     <header class="top">
       <div class="wrap">
         <a class="name" href="/">HAKAN ALEMDAR</a>
         <nav aria-label="Main">
-          {links.map(([href, label]) => <a class:list={['sec-link', { keep: href === '/blog' }]} href={href} aria-current={page === 'blog' && href === '/blog' ? 'page' : undefined}>{label}</a>)}
+          {nav.map(([href, label]) => <a class:list={['sec-link', { keep: href === '/blog' }]} href={href} aria-current={page === 'blog' && href === '/blog' ? 'page' : undefined}>{label}</a>)}
           <span class="sep" aria-hidden="true"></span>
           <a class="side" href="/law" aria-current={!page && side === 'law' ? 'page' : undefined}>Law &amp; Tech</a>
           <a class="side" href="/games" aria-current={!page && side === 'games' ? 'page' : undefined}>Games</a>
@@ -43,7 +70,7 @@ const links = side === 'games'
       </div>
     </header>
   )}
-  <main>
+  <main id="main">
     <slot />
   </main>
 </body>

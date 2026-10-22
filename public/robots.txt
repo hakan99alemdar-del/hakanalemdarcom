@@ -1,2 +1,4 @@
 User-agent: *
 Allow: /
+
+Sitemap: https://hakanalemdarcom.hakanalemdar.workers.dev/sitemap-index.xml
