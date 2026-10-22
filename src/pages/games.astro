@@ -7,16 +7,18 @@ const usd = (n: number) => '$' + n.toLocaleString('en-US');
 const year = (s?: string) => s?.split(' ').pop();
 const partners = ['Kickstarter', 'BackerKit', 'Grim Golem', 'Grimcraft Games', 'OGEM Istanbul'];
 
-// Full-bleed art for each project in the hero; the books without key art use their print photo.
+// Full-bleed art for each project in the hero.
 const heroArt: Record<string, string> = {
-  odsire: '/art/odsire/ortahisar-dusk.webp',
+  odsire: '/art/odsire/thumbnail.webp',
   yatagan: '/art/yatagan/cover.webp',
-  crusades: '/art/crusades/citadel-of-saladin.webp',
-  'silk-road': '/art/books/silk-road.webp',
-  seekers: '/art/crescent/lunar-eclipse.webp',
-  wayfarer: '/art/books/wayfarer.webp',
+  crusades: '/art/crusades/era-of-the-crusades.webp',
+  'silk-road': '/art/silk-road/hero.webp',
+  seekers: '/art/crescent/the-ghost.webp',
+  wayfarer: '/art/wayfarer/hero.webp',
 };
-const short: Record<string, string> = { odsire: 'Odsire', yatagan: 'Yatagan', crusades: 'Crusades', 'silk-road': 'Silk Road', seekers: 'Crescent', wayfarer: 'Wayfarer' };
+// The Silk Road art carries its logo near the top; pin it there so the logo clears the nav.
+const heroPos: Record<string, string> = { 'silk-road': 'center top' };
+const short: Record<string, string> = { odsire: 'Odsire', yatagan: 'Yatagan', crusades: 'Era of the Crusades', 'silk-road': 'Empires of the Silk Road', seekers: 'City of Crescent', wayfarer: 'Wayfarer' };
 const slides = studios.flatMap((s) => s.projects.map((p) => ({ ...p, studio: s.name })));
 const [vv, metis] = studios;
 const [odsire, yatagan] = vv.projects;
@@ -26,7 +28,7 @@ const wide = new Set([0, 4, 9]);
   <section class="hero games" id="top">
     <div class="slides" aria-hidden="true">
       {slides.map((p, i) => (
-        <div class:list={['slide', { on: i === 0 }]}><img src={heroArt[p.slug]} alt="" fetchpriority={i === 0 ? 'high' : undefined} loading={i === 0 ? undefined : 'lazy'}></div>
+        <div class:list={['slide', { on: i === 0 }]}><img src={heroArt[p.slug]} alt="" style={heroPos[p.slug] && `object-position:${heroPos[p.slug]}`} fetchpriority={i === 0 ? 'high' : undefined} loading={i === 0 ? undefined : 'lazy'}></div>
       ))}
     </div>
     <div class="wrap hero-body">
@@ -34,8 +36,8 @@ const wide = new Set([0, 4, 9]);
         <div class:list={['slide-text', { on: i === 0 }]} id={`slide-${i}`} role="tabpanel">
           <div class="kicker">{p.studio} · {p.platform} · {p.pledged ? `${usd(p.pledged)} raised` : p.status}</div>
           {i === 0
-            ? <h1 class="display" transition:name="headline">{short[p.slug]}</h1>
-            : <h2 class="display">{short[p.slug]}</h2>}
+            ? <h1 class="display slide-title" transition:name="headline">{short[p.slug]}</h1>
+            : <h2 class="display slide-title">{short[p.slug]}</h2>}
           <p>{p.blurb}</p>
           <div class="btns">
             <a class="btn" href={p.url}>{p.pledged ? 'See the campaign' : 'Follow the launch'} <Arrow /></a>

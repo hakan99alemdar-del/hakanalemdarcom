@@ -62,7 +62,7 @@ a:hover { color: var(--acc-ink); }
 /* Heroes */
 .hero { position: relative; min-height: 100vh; min-height: 100svh; display: flex; flex-direction: column; overflow: hidden; }
 .hero .grid { position: absolute; inset: 0; width: 100%; height: 100%; }
-.hero-body { position: relative; margin-top: auto; padding-bottom: 48px; display: flex; flex-direction: column; gap: 24px; padding-top: 140px; }
+.hero-body { position: relative; width: 100%; margin-top: auto; padding-bottom: 48px; display: flex; flex-direction: column; gap: 24px; padding-top: 140px; }
 .hero-body .display { font-size: clamp(64px, 14.5vw, 200px); }
 .hero-foot { display: flex; flex-wrap: wrap; gap: 24px; justify-content: space-between; align-items: flex-end; border-top: 1px solid var(--line); padding-top: 24px; }
 .hero-foot p { margin: 0; max-width: 580px; font-size: 19px; color: var(--mute); }
@@ -137,14 +137,15 @@ a:hover { color: var(--acc-ink); }
 .slide.on { opacity: 1; }
 .slide img { width: 100%; height: 100%; object-fit: cover; transform: scale(1.06); transition: transform 7s linear; }
 .slide.on img { transform: scale(1); }
-.hero.games::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(11,9,7,.93), rgba(11,9,7,.55) 48%, rgba(11,9,7,.1)); pointer-events: none; }
+.hero.games::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(11,9,7,.7), rgba(11,9,7,0) 22%), linear-gradient(90deg, rgba(11,9,7,.93), rgba(11,9,7,.55) 48%, rgba(11,9,7,.1)); pointer-events: none; }
 .hero.games > :not(.slides) { z-index: 1; }
 .slide-text { display: none; flex-direction: column; gap: 20px; }
 .slide-text.on { display: flex; animation: rise .7s var(--ease); }
 @keyframes rise { from { opacity: 0; transform: translateY(18px); } }
+.hero-body .slide-title { font-size: clamp(56px, 10vw, 168px); max-width: 12ch; }
 .slide-text p { margin: 0; max-width: 540px; font-size: 20px; color: var(--mute); }
 .count { font-size: 14px; color: var(--dim); align-self: center; }
-.tabs { position: relative; display: flex; flex-wrap: wrap; border-top: 1px solid rgba(251,244,234,.25); }
+.tabs { position: relative; display: flex; flex-wrap: wrap; border-top: 1px solid rgba(251,244,234,.25); background: rgba(11,9,7,.72); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
 .tabs button { flex: 1 1 140px; background: none; border: 0; border-top: 3px solid transparent; margin-top: -1px; color: var(--dim); font: 600 13px/1.2 var(--body); text-align: left; padding: 18px var(--pad) 18px 20px; cursor: pointer; min-height: 52px; }
 .tabs button:hover { color: var(--ink); }
 .tabs button[aria-selected='true'] { color: var(--ink); border-top-color: var(--acc); }
