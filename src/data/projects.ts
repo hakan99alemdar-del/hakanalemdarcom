@@ -42,7 +42,7 @@ export const studios: Studio[] = [
         ended: 'Apr 2026',
         blurb: 'A 500+ page 5E setting and adventure in a hidden Cappadocia where fire is cursed.',
         role: 'Co-founder and producer. Set up the US company and negotiated vendor and licensing contracts.',
-        art: { from: '#5A2A18', to: '#F2A35C' },
+        art: { from: '#5A2A18', to: '#F2A35C', cover: '/art/odsire/cover.webp' },
       },
       {
         slug: 'yatagan',
@@ -52,7 +52,7 @@ export const studios: Studio[] = [
         status: 'Launching 27 Oct 2026',
         blurb: 'A Color D12 tabletop RPG set in the Nomad Worlds, made with Grimcraft Games.',
         role: 'Co-producer for Vernal Voyage.',
-        art: { from: '#2E1A2B', to: '#B5463A' },
+        art: { from: '#2E1A2B', to: '#B5463A', cover: '/art/yatagan/cover.webp' },
       },
     ],
   },
@@ -128,13 +128,16 @@ export const totals = {
 
 // Key art for the strip under the games hero, picked for the warm palette.
 export const stripArt = [
+  ['odsire/ortahisar-dusk', 'Ortahisar at Dusk'],
   ['crusades/era-of-the-crusades', 'Era of the Crusades'],
+  ['odsire/ruhimancer', 'Ruhimancer'],
   ['crescent/lunar-eclipse', 'Lunar Eclipse'],
   ['crusades/womb-of-the-dragon', 'Womb of the Dragon'],
   ['crescent/murder-at-pera-palace', 'Murder at Pera Palace'],
   ['crusades/citadel-of-saladin', 'Citadel of Saladin'],
   ['crescent/lilac-sultan', 'Lilac Sultan'],
   ['crusades/historica-arcanum-universe', 'Historica Arcanum'],
+  ['odsire/ortahisar', 'Ortahisar'],
   ['crescent/harem', 'Harem'],
   ['crescent/the-ghost', 'The Ghost'],
   ['crescent/death-of-a-mentor', 'Death of a Mentor'],
