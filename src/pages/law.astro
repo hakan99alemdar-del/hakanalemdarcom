@@ -46,7 +46,7 @@ const latest = (await posts('law')).slice(0, 3);
     <div class="sec-head rv"><h2 class="display">LL.M. roadmap</h2><p>Digitalization and Law, Julius-Maximilians-Universität Würzburg.</p></div>
     <ol class="road rv">
       {roadmap.map((r) => (
-        <li class={r.state}><b>{r.term} · {r.state}</b><span>{r.text}</span></li>
+        <li class={r.state}><b>{r.term} · {r.state}</b><ul>{r.items.map((m) => <li>{m}</li>)}</ul></li>
       ))}
     </ol>
   </section>
@@ -89,7 +89,7 @@ const latest = (await posts('law')).slice(0, 3);
       <div>
         <span class="kicker">Where they meet</span>
         <span class="display">Games law</span>
-        <p>Licensing art and IP, platform terms, consumer law for digital goods, and AI-generated assets under the AI Act. I mentored game founders on company setup at OGEM, Istanbul’s municipal game incubator, and I’m building my LL.M. thesis around this field.</p>
+        <p>Licensing art and IP, platform terms, consumer law for digital goods, and AI-generated assets under the AI Act. I mentored game founders on company setup at OGEM, Istanbul’s municipal game incubator.</p>
         <span class="go">See the games side →</span>
       </div>
       <img src="/art/odsire/ortahisar-dusk.webp" alt="Ortahisar at dusk, key art from Odsire" loading="lazy">

@@ -105,6 +105,9 @@ a:hover { color: var(--acc-ink); }
 .road { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 24px; }
 .road li { border-top: 2px solid #3A5491; padding-top: 20px; display: flex; flex-direction: column; gap: 8px; font-size: 18px; }
 .road li b { font-size: 13px; letter-spacing: .15em; font-weight: 500; color: var(--dim); text-transform: uppercase; }
+/* Modules under each term */
+.road ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.road ul li { border: 0; padding: 0; font-size: 16px; color: var(--mute); }
 .road li.now { border-top: 4px solid var(--acc); padding-top: 18px; }
 .road li.now b { color: var(--acc); }
 .road li.next { border-top-style: dashed; border-top-color: var(--line); }
