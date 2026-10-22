@@ -1,7 +1,9 @@
 ---
 import Base from '../layouts/Base.astro';
 import Arrow from '../components/Arrow.astro';
-import { studios, totals, stripArt } from '../data/projects';
+import Posts from '../components/Posts.astro';
+import { studios, totals } from '../data/projects';
+import { posts } from '../data/blog';
 const k = (n: number) => Math.floor(n / 1000);
 const usd = (n: number) => '$' + n.toLocaleString('en-US');
 const year = (s?: string) => s?.split(' ').pop();
@@ -22,7 +24,7 @@ const short: Record<string, string> = { odsire: 'Odsire', yatagan: 'Yatagan', cr
 const slides = studios.flatMap((s) => s.projects.map((p) => ({ ...p, studio: s.name })));
 const [vv, metis] = studios;
 const [odsire, yatagan] = vv.projects;
-const wide = new Set([0, 4, 9]);
+const latest = (await posts('games')).slice(0, 3);
 ---
 <Base side="games" title="Hakan Alemdar · Producer of tabletop RPGs" description={`Co-founder and producer of tabletop RPGs: ${totals.campaigns} Kickstarter campaigns, $${k(totals.pledged)}K+ raised from ${totals.backers.toLocaleString('en-US')} backers.`}>
   <section class="hero games" id="top">
@@ -113,16 +115,9 @@ const wide = new Set([0, 4, 9]);
     </div>
   </section>
 
-  <section class="sec" id="art">
-    <div class="wrap sec-head rv"><h2 class="display">From the books</h2><p>Art from Odsire (© Vernal Voyage) and Historica Arcanum (© Metis Creative), shown with permission. Click to enlarge.</p></div>
-    <div class="wall">
-      {stripArt.map(([slug, title], i) => (
-        <button type="button" class:list={{ wide: wide.has(i) }} data-full={`/art/${slug}.webp`} data-title={title} aria-label={`Open ${title}`}>
-          <img src={`/art/${slug}${wide.has(i) ? '' : '-sm'}.webp`} alt="" loading="lazy" decoding="async">
-          <span>{title}</span>
-        </button>
-      ))}
-    </div>
+  <section class="sec wrap" id="blog">
+    <div class="sec-head rv"><h2 class="display">From the blog</h2><p>Notes on making, funding and shipping tabletop games. <a href="/blog">All posts →</a></p></div>
+    <div class="rv"><Posts list={latest} /></div>
   </section>
 
   <section class="sec wrap">
@@ -152,9 +147,4 @@ const wide = new Set([0, 4, 9]);
     </footer>
   </section>
 
-  <dialog class="lightbox" id="lightbox">
-    <form method="dialog"><button class="close" aria-label="Close">×</button></form>
-    <img alt="" id="lightbox-img">
-    <p id="lightbox-title"></p>
-  </dialog>
 </Base>

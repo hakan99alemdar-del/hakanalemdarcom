@@ -1,0 +1,22 @@
+---
+import { fmtDate, type Post } from '../data/blog';
+
+interface Props { list: Post[]; }
+const { list } = Astro.props;
+---
+{list.length ? (
+  <ol class="posts">
+    {list.map((p) => (
+      <li>
+        <a href={`/blog/${p.id}`}>
+          <time datetime={p.data.date.toISOString()}>{fmtDate(p.data.date)}</time>
+          <span class="post-title">{p.data.title}</span>
+          <span class="post-desc">{p.data.description}</span>
+          <span class:list={['tag', p.data.side]}>{p.data.side === 'law' ? 'Law & Tech' : 'Games'}</span>
+        </a>
+      </li>
+    ))}
+  </ol>
+) : (
+  <p class="posts-empty">The first posts are on the way.</p>
+)}

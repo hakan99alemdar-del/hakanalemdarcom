@@ -2,8 +2,11 @@
 import Base from '../layouts/Base.astro';
 import GridLines from '../components/GridLines.astro';
 import Arrow from '../components/Arrow.astro';
+import Posts from '../components/Posts.astro';
 import { focus, roadmap, experience, education, skills } from '../data/law';
+import { posts } from '../data/blog';
 const ticker = focus.map((f) => f.title);
+const latest = (await posts('law')).slice(0, 3);
 ---
 <Base side="law" title="Hakan Alemdar · Attorney, LL.M. Digitalization & Law" description="Turkish-qualified attorney and LL.M. candidate in Digitalization and Law in Würzburg. Data protection, AI regulation, IP licensing and cross-border contracts. Based in Frankfurt am Main.">
   <section class="hero" id="top">
@@ -74,6 +77,11 @@ const ticker = focus.map((f) => f.title);
         {skills.map(([k, v]) => <div class="item"><small>{k}</small><span>{v}</span></div>)}
       </div>
     </div>
+  </section>
+
+  <section class="sec wrap" id="blog">
+    <div class="sec-head rv"><h2 class="display">Writing</h2><p>Notes on data protection, AI regulation and IP. <a href="/blog">All posts →</a></p></div>
+    <div class="rv"><Posts list={latest} /></div>
   </section>
 
   <section class="sec wrap">

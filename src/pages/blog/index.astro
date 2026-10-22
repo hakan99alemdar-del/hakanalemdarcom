@@ -1,0 +1,27 @@
+---
+import Base from '../../layouts/Base.astro';
+import GridLines from '../../components/GridLines.astro';
+import Posts from '../../components/Posts.astro';
+import { posts } from '../../data/blog';
+const list = await posts();
+---
+<Base side="law" page="blog" title="Blog · Hakan Alemdar" description="Writing on tech law, AI regulation and IP, and on making and funding tabletop games.">
+  <section class="page-head">
+    <GridLines />
+    <div class="wrap">
+      <div class="kicker">Law &amp; Tech · Games</div>
+      <h1 class="display">Blog</h1>
+      <p>Writing on data protection, AI regulation and IP, and on making, funding and shipping tabletop games.</p>
+    </div>
+  </section>
+  <section class="wrap sec-tight">
+    <Posts list={list} />
+  </section>
+  <section class="wrap contact">
+    <footer class="foot">
+      <a href="/law">Law &amp; Tech</a>
+      <a href="/games">Games</a>
+      <span>© 2026 Hakan Alemdar</span>
+    </footer>
+  </section>
+</Base>

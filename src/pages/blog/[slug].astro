@@ -1,0 +1,43 @@
+---
+import { render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Posts from '../../components/Posts.astro';
+import { posts, fmtDate, type Post } from '../../data/blog';
+
+export async function getStaticPaths() {
+  return (await posts()).map((post) => ({ params: { slug: post.id }, props: { post } }));
+}
+
+interface Props { post: Post; }
+const { post } = Astro.props;
+const { Content } = await render(post);
+const { title, description, date, side, cover } = post.data;
+const more = (await posts(side)).filter((p) => p.id !== post.id).slice(0, 3);
+---
+<Base side={side} page="blog" title={`${title} · Hakan Alemdar`} description={description}>
+  <article>
+    <header class="page-head">
+      {cover && <img class="page-cover" src={cover} alt="">}
+      <div class="wrap">
+        <div class="kicker"><a href="/blog">Blog</a> · {side === 'law' ? 'Law & Tech' : 'Games'} · <time datetime={date.toISOString()}>{fmtDate(date)}</time></div>
+        <h1 class="display post-h1">{title}</h1>
+        <p>{description}</p>
+      </div>
+    </header>
+    <div class="wrap">
+      <div class="prose"><Content /></div>
+    </div>
+  </article>
+  {more.length > 0 && (
+    <section class="wrap sec">
+      <div class="sec-head"><h2 class="display">More posts</h2><p><a href="/blog">All posts →</a></p></div>
+      <Posts list={more} />
+    </section>
+  )}
+  <section class="wrap contact">
+    <footer class="foot">
+      <a href="mailto:hakan99alemdar@gmail.com">hakan99alemdar@gmail.com</a>
+      <span>© 2026 Hakan Alemdar</span>
+    </footer>
+  </section>
+</Base>

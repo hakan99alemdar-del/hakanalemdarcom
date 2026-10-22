@@ -125,20 +125,3 @@ export const totals = {
   pledged: funded.reduce((n, p) => n + (p.pledged ?? 0), 0),
   backers: funded.reduce((n, p) => n + (p.backers ?? 0), 0),
 };
-
-// Key art for the strip under the games hero, picked for the warm palette.
-export const stripArt = [
-  ['odsire/ortahisar-dusk', 'Ortahisar at Dusk'],
-  ['crusades/era-of-the-crusades', 'Era of the Crusades'],
-  ['odsire/ruhimancer', 'Ruhimancer'],
-  ['crescent/lunar-eclipse', 'Lunar Eclipse'],
-  ['crusades/womb-of-the-dragon', 'Womb of the Dragon'],
-  ['crescent/murder-at-pera-palace', 'Murder at Pera Palace'],
-  ['crusades/citadel-of-saladin', 'Citadel of Saladin'],
-  ['crescent/lilac-sultan', 'Lilac Sultan'],
-  ['crusades/historica-arcanum-universe', 'Historica Arcanum'],
-  ['odsire/ortahisar', 'Ortahisar'],
-  ['crescent/harem', 'Harem'],
-  ['crescent/the-ghost', 'The Ghost'],
-  ['crescent/death-of-a-mentor', 'Death of a Mentor'],
-] as const;
