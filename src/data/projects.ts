@@ -103,7 +103,7 @@ export const studios: Studio[] = [
       },
       {
         slug: 'seekers',
-        title: 'Historica Arcanum: Seeker’s Handbook to the Orient',
+        title: 'Historica Arcanum: The City of Crescent',
         platform: 'Kickstarter',
         url: 'https://www.kickstarter.com/projects/metiscreative/historica-arcanum-seekers-handbook-to-orient',
         pledged: 86676,
