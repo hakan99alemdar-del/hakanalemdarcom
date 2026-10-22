@@ -1,16 +1,32 @@
 ---
 import Base from '../layouts/Base.astro';
-import ProjectCard from '../components/ProjectCard.astro';
+import Showcase from '../components/Showcase.astro';
 import { studios, totals, crescentArt } from '../data/projects';
 const k = (n: number) => Math.floor(n / 1000);
+const headline = 'Worlds from history and myth, funded by backers.';
+const partners = ['Kickstarter', 'BackerKit', 'Grim Golem', 'Grimcraft Games', 'OGEM Istanbul'];
 ---
 <Base side="games" title="Hakan Alemdar · Producer of tabletop RPGs" description={`Co-founder and producer of tabletop RPGs: ${totals.campaigns} Kickstarter campaigns, $${k(totals.pledged)}K+ raised from ${totals.backers.toLocaleString('en-US')} backers.`}>
   <header class="hero hero-art">
     <div class="eyebrow">Producer · Co-founder · Istanbul &amp; New York</div>
-    <h1 transition:name="headline">Worlds from history and myth, funded by backers.</h1>
+    <h1 transition:name="headline" class="reveal" aria-label={headline}>{headline.split(' ').map((w, i) => <><span aria-hidden="true" style={`--i:${i}`}>{w}</span>{' '}</>)}</h1>
     <p class="lede">I co-founded two studios that make tabletop roleplaying games and ran the business side: the US companies, licensing and vendor contracts, and the supply chain that got books to backers.</p>
     <p class="actions"><a href="/">← My day job: tech law</a></p>
   </header>
+
+  <div class="marquee" aria-label="Key art from The City of Crescent">
+    <ul class="marquee-track">
+      {[...crescentArt, ...crescentArt].map(([slug, title], i) => (
+        <li aria-hidden={i >= crescentArt.length ? 'true' : undefined}>
+          <button type="button" class="shot" tabindex={i >= crescentArt.length ? -1 : undefined} data-full={`/art/crescent/${slug}.webp`} data-title={title} aria-label={`Open ${title}`}>
+            <img src={`/art/crescent/${slug}-sm.webp`} alt="" width="640" height="338" decoding="async">
+            <span>{title}</span>
+          </button>
+        </li>
+      ))}
+    </ul>
+  </div>
+  <p class="src marquee-note">Art from <em>Historica Arcanum: The City of Crescent</em>. © Metis Creative, shown with permission. Click to enlarge.</p>
 
   <section class="block">
     <h2>By the numbers</h2>
@@ -24,33 +40,20 @@ const k = (n: number) => Math.floor(n / 1000);
     </div>
   </section>
 
+  {studios.map((s) => (
+    <section class="studio-band">
+      <header class="studio-head">
+        <div class="eyebrow">{s.role} · {s.years}</div>
+        <h2>{s.name}</h2>
+        <p>{s.note}</p>
+      </header>
+      {s.projects.map((p) => <Showcase p={p} />)}
+    </section>
+  ))}
+
   <section class="block">
-    <h2>Studios</h2>
-    <div>
-      {studios.map((s) => (
-        <div class="studio">
-          <header><h3>{s.name}</h3><span>{s.role} · {s.years} · {s.note}</span></header>
-          <div class="projects">{s.projects.map((p) => <ProjectCard p={p} />)}</div>
-        </div>
-      ))}
-    </div>
-  </section>
-  <section class="block">
-    <h2>From the books</h2>
-    <div>
-      <p class="gallery-intro">Key art from <em>Historica Arcanum: The City of Crescent</em>, a 5E setting in Ottoman Istanbul by Metis Creative.</p>
-      <ul class="gallery">
-        {crescentArt.map(([slug, title]) => (
-          <li>
-            <button type="button" class="shot" data-full={`/art/crescent/${slug}.webp`} data-title={title} aria-label={`Open ${title}`}>
-              <img src={`/art/crescent/${slug}-sm.webp`} alt={title} width="640" height="338" loading="lazy" decoding="async">
-              <span>{title}</span>
-            </button>
-          </li>
-        ))}
-      </ul>
-      <p class="src">© Metis Creative. Shown with permission.</p>
-    </div>
+    <h2>Worked with</h2>
+    <ul class="partners">{partners.map((n) => <li>{n}</li>)}</ul>
   </section>
 
   <dialog class="lightbox" id="lightbox">
