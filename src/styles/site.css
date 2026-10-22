@@ -69,6 +69,7 @@ a:hover { color: var(--acc-ink); }
 @media (max-width: 760px) { .code-rain { top: 128px; height: calc(100% - 128px); } }
 .hero-body { position: relative; width: 100%; margin-top: auto; padding-bottom: 48px; display: flex; flex-direction: column; gap: 24px; padding-top: 140px; }
 .hero-body .display { font-size: clamp(64px, 14.5vw, 200px); }
+.hero.law .hero-body .display { font-size: clamp(52px, 8vw, 116px); }
 .hero-foot { display: flex; flex-wrap: wrap; gap: 24px; justify-content: space-between; align-items: flex-end; border-top: 1px solid var(--line); padding-top: 24px; }
 .hero-foot p { margin: 0; max-width: 580px; font-size: 19px; color: var(--mute); }
 .btns { display: flex; flex-wrap: wrap; gap: 12px; }
