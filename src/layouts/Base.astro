@@ -1,8 +1,12 @@
 ---
 import { ClientRouter } from 'astro:transitions';
+import '@fontsource/anton/400.css';
+import '@fontsource/inter/400.css';
+import '@fontsource/inter/500.css';
+import '@fontsource/inter/600.css';
 import '../styles/site.css';
 
-interface Props { side: 'home' | 'law' | 'games'; title: string; description: string; page?: 'blog'; }
+interface Props { side: 'home' | 'law' | 'games'; title: string; description: string; page?: 'blog' | 'privacy'; }
 const { side, title, description, page } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const links = side === 'games'
@@ -23,9 +27,6 @@ const links = side === 'games'
   <meta property="og:url" content={canonical}>
   <meta name="theme-color" content={side === 'games' ? '#0B0907' : '#0A0F1A'}>
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600&display=swap">
   <ClientRouter />
 </head>
 <body data-side={side}>

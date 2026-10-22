@@ -26,7 +26,7 @@ export const education = [
 ];
 
 export const skills = [
-  ['Languages', 'Turkish (native), English (C1), German (A1, in classes)'],
+  ['Languages', 'Turkish (native), English (C1), German (A2)'],
   ['Legal research', 'LexisNexis, Justia, Kazanci, Lexpera, HUDOC'],
   ['Tools', 'Microsoft Office, MyCase, Adobe Acrobat Pro, Notion, Slack, Teams'],
 ];
