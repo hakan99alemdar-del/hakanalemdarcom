@@ -1,5 +1,5 @@
 // Campaign figures checked on the live campaign pages on 2026-10-21.
-// Art goes in public/art/<slug>/ (cover.webp + gallery images); until then a placeholder is drawn.
+// Art: set art.cover to a file in public/art/ (photo: true for product shots on black); without one a placeholder is drawn.
 
 export type Project = {
   slug: string;
@@ -13,7 +13,7 @@ export type Project = {
   status?: string;
   blurb: string;
   role: string;
-  art: { from: string; to: string; credit?: string; cover?: string };
+  art: { from: string; to: string; credit?: string; cover?: string; photo?: boolean };
 };
 
 export type Studio = {
@@ -73,7 +73,7 @@ export const studios: Studio[] = [
         ended: 'Sep 2023',
         blurb: 'Two 5E sourcebooks set in Jerusalem and Cairo during the Crusades.',
         role: 'Producer. Supply chain, fulfilment and contracts.',
-        art: { from: '#3A2414', to: '#D9A441' },
+        art: { from: '#3A2414', to: '#D9A441', cover: '/art/books/crusades.webp', photo: true },
       },
       {
         slug: 'wayfarer',
@@ -86,7 +86,7 @@ export const studios: Studio[] = [
         ended: 'May 2023',
         blurb: 'A 5E sourcebook, setting guide and adventure drawn from Asian myths and legends.',
         role: 'Producer. Cross-border supply chain.',
-        art: { from: '#1F2C3A', to: '#C9A15A' },
+        art: { from: '#1F2C3A', to: '#C9A15A', cover: '/art/books/wayfarer.webp', photo: true },
       },
       {
         slug: 'silk-road',
@@ -99,7 +99,7 @@ export const studios: Studio[] = [
         ended: 'Oct 2022',
         blurb: 'Two 5E sourcebooks with professions, overland travel and plague rules.',
         role: 'Producer. Supply chain, fulfilment and contracts.',
-        art: { from: '#123A3A', to: '#E0B25A' },
+        art: { from: '#123A3A', to: '#E0B25A', cover: '/art/books/silk-road.webp', photo: true },
       },
       {
         slug: 'seekers',
@@ -112,7 +112,7 @@ export const studios: Studio[] = [
         ended: 'Sep 2021',
         blurb: 'A 5E sourcebook drawing on Near Eastern cultures, with professions and alternate-history tools.',
         role: 'Co-founder and producer. First campaign of the studio.',
-        art: { from: '#2A1838', to: '#C77B4A' },
+        art: { from: '#2A1838', to: '#C77B4A', cover: '/art/books/city-of-crescent.webp', photo: true },
       },
     ],
   },
@@ -125,3 +125,17 @@ export const totals = {
   pledged: funded.reduce((n, p) => n + (p.pledged ?? 0), 0),
   backers: funded.reduce((n, p) => n + (p.backers ?? 0), 0),
 };
+
+// Key art from Historica Arcanum: The City of Crescent (Metis Creative), shown in the gallery.
+export const crescentArt = [
+  ['lunar-eclipse', 'Lunar Eclipse'],
+  ['murder-at-pera-palace', 'Murder at Pera Palace'],
+  ['lilac-sultan', 'Lilac Sultan'],
+  ['thieves-guild', 'Thieves Guild'],
+  ['harem', 'Harem'],
+  ['the-ghost', 'The Ghost'],
+  ['the-eye-witness', 'The Eye Witness'],
+  ['the-cut', 'The Cut'],
+  ['hano-the-widow', 'Hano the Widow'],
+  ['death-of-a-mentor', 'Death of a Mentor'],
+] as const;

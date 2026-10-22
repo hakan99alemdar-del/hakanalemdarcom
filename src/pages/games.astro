@@ -1,11 +1,11 @@
 ---
 import Base from '../layouts/Base.astro';
 import ProjectCard from '../components/ProjectCard.astro';
-import { studios, totals } from '../data/projects';
+import { studios, totals, crescentArt } from '../data/projects';
 const k = (n: number) => Math.floor(n / 1000);
 ---
 <Base side="games" title="Hakan Alemdar · Producer of tabletop RPGs" description={`Co-founder and producer of tabletop RPGs: ${totals.campaigns} Kickstarter campaigns, $${k(totals.pledged)}K+ raised from ${totals.backers.toLocaleString('en-US')} backers.`}>
-  <header class="hero">
+  <header class="hero hero-art">
     <div class="eyebrow">Producer · Co-founder · Istanbul &amp; New York</div>
     <h1 transition:name="headline">Worlds from history and myth, funded by backers.</h1>
     <p class="lede">I co-founded two studios that make tabletop roleplaying games and ran the business side: the US companies, licensing and vendor contracts, and the supply chain that got books to backers.</p>
@@ -35,6 +35,29 @@ const k = (n: number) => Math.floor(n / 1000);
       ))}
     </div>
   </section>
+  <section class="block">
+    <h2>From the books</h2>
+    <div>
+      <p class="gallery-intro">Key art from <em>Historica Arcanum: The City of Crescent</em>, a 5E setting in Ottoman Istanbul by Metis Creative.</p>
+      <ul class="gallery">
+        {crescentArt.map(([slug, title]) => (
+          <li>
+            <button type="button" class="shot" data-full={`/art/crescent/${slug}.webp`} data-title={title} aria-label={`Open ${title}`}>
+              <img src={`/art/crescent/${slug}-sm.webp`} alt={title} width="640" height="338" loading="lazy" decoding="async">
+              <span>{title}</span>
+            </button>
+          </li>
+        ))}
+      </ul>
+      <p class="src">© Metis Creative. Shown with permission.</p>
+    </div>
+  </section>
+
+  <dialog class="lightbox" id="lightbox">
+    <form method="dialog"><button class="close" aria-label="Close">×</button></form>
+    <img alt="" id="lightbox-img">
+    <p id="lightbox-title"></p>
+  </dialog>
 </Base>
 
 <script>
@@ -51,5 +74,20 @@ const k = (n: number) => Math.floor(n / 1000);
       requestAnimationFrame(step);
     });
   }
-  document.addEventListener('astro:page-load', () => { if (document.body.dataset.side === 'games') countUp(); });
+  function gallery() {
+    const box = document.getElementById('lightbox') as HTMLDialogElement | null;
+    if (!box) return;
+    const img = document.getElementById('lightbox-img') as HTMLImageElement;
+    const cap = document.getElementById('lightbox-title') as HTMLElement;
+    document.querySelectorAll<HTMLButtonElement>('.shot').forEach((b) => b.addEventListener('click', () => {
+      img.src = b.dataset.full ?? ''; img.alt = b.dataset.title ?? ''; cap.textContent = b.dataset.title ?? '';
+      box.showModal();
+    }));
+    box.addEventListener('click', (e) => { if (e.target === box) box.close(); });
+  }
+  document.addEventListener('astro:page-load', () => {
+    if (document.body.dataset.side !== 'games') return;
+    countUp();
+    gallery();
+  });
 </script>

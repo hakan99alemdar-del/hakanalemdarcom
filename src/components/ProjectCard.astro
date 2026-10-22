@@ -6,15 +6,15 @@ import { studios, type Project } from '../data/projects';
 interface Props { p: Project; }
 const { p } = Astro.props;
 const usd = (n: number) => '$' + n.toLocaleString('en-US');
-const coverFile = ['webp', 'avif', 'jpg', 'png'].map((ext) => `art/${p.slug}/cover.${ext}`)
+const coverFile = p.art.cover?.slice(1) ?? ['webp', 'avif', 'jpg', 'png'].map((ext) => `art/${p.slug}/cover.${ext}`)
   .find((f) => fs.existsSync(path.join(process.cwd(), 'public', f)));
 const max = Math.max(...studios.flatMap((s) => s.projects).map((x) => x.pledged ?? 0));
 const pct = p.pledged && p.goal ? Math.round((p.pledged / p.goal) * 100) : undefined;
 ---
 <article class="proj">
-  <figure class:list={['art', { ph: !coverFile }]} style={`--a1:${p.art.from};--a2:${p.art.to};margin:0`}>
-    {coverFile && <img src={`/${coverFile}`} alt={`${p.title} cover art`} loading="lazy" decoding="async">}
-    <figcaption>{p.art.credit ? `Art: ${p.art.credit}` : coverFile ? '' : 'Cover art coming soon'}</figcaption>
+  <figure class:list={['art', { ph: !coverFile, photo: p.art.photo }]} style={`--a1:${p.art.from};--a2:${p.art.to};margin:0`}>
+    {coverFile && <img src={`/${coverFile}`} alt={p.art.photo ? `${p.title}, printed hardcover` : `${p.title} cover art`} loading="lazy" decoding="async">}
+    <figcaption>{p.art.credit ? `Art: ${p.art.credit}` : coverFile ? '' : 'Art coming soon'}</figcaption>
   </figure>
   <div class="body">
     <h4><a href={p.url}>{p.title}</a></h4>
