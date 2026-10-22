@@ -16,6 +16,8 @@ const heroArt: Record<string, string> = {
   seekers: '/art/crescent/the-ghost.webp',
   wayfarer: '/art/wayfarer/hero.webp',
 };
+// The Silk Road art is taller than the hero; keep the characters' heads in frame.
+const heroPos: Record<string, string> = { 'silk-road': 'center top' };
 const short: Record<string, string> = { odsire: 'Odsire', yatagan: 'Yatagan', crusades: 'Era of the Crusades', 'silk-road': 'Empires of the Silk Road', seekers: 'City of Crescent', wayfarer: 'Wayfarer' };
 const slides = studios.flatMap((s) => s.projects.map((p) => ({ ...p, studio: s.name })));
 const [vv, metis] = studios;
@@ -26,7 +28,7 @@ const wide = new Set([0, 4, 9]);
   <section class="hero games" id="top">
     <div class="slides" aria-hidden="true">
       {slides.map((p, i) => (
-        <div class:list={['slide', { on: i === 0 }]}><img src={heroArt[p.slug]} alt="" fetchpriority={i === 0 ? 'high' : undefined} loading={i === 0 ? undefined : 'lazy'}></div>
+        <div class:list={['slide', { on: i === 0 }]}><img src={heroArt[p.slug]} alt="" style={heroPos[p.slug] && `object-position:${heroPos[p.slug]}`} fetchpriority={i === 0 ? 'high' : undefined} loading={i === 0 ? undefined : 'lazy'}></div>
       ))}
     </div>
     <div class="wrap hero-body">
