@@ -1,0 +1,76 @@
+---
+// Law hero backdrop: columns of abstract "document" lines that a neon beam
+// sweeps across, ticking off the rules it checks.
+const ROWS = 24, COLS = 3;
+let seed = 7;
+const rand = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
+const cols = Array.from({ length: COLS }, () =>
+  Array.from({ length: ROWS }, () => (rand() < 0.14 ? 20 + rand() * 25 : 72 + rand() * 28).toFixed(0)));
+const tags = ['GDPR · Art. 28', 'AI Act · Art. 50', 'UrhG · § 31', 'DSA · Art. 14', 'Data Act', 'TDDDG · § 25',
+  'BGB · § 327', 'AI Act · Annex III', 'GDPR · Art. 44', 'Licence scope', 'NIS2', 'GDPR · Art. 6'];
+---
+<div class="scan" aria-hidden="true" data-tags={JSON.stringify(tags)}>
+  <div class="scan-cols">
+    {cols.map((rows) => (
+      <div class="scan-col">{rows.map((w) => <i style={`width:${w}%`}></i>)}</div>
+    ))}
+  </div>
+  <div class="scan-glow"></div>
+  <div class="scan-beam"><b></b></div>
+</div>
+
+<script>
+  let timer: number | undefined;
+  function start() {
+    window.clearTimeout(timer);
+    const root = document.querySelector<HTMLElement>('.scan');
+    if (!root || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const tags: string[] = JSON.parse(root.dataset.tags!);
+    const cols = [...root.querySelectorAll<HTMLElement>('.scan-col')];
+    const beam = root.querySelector<HTMLElement>('.scan-beam')!, glow = root.querySelector<HTMLElement>('.scan-glow')!;
+    const recent: number[] = [];
+    let t = 0;
+    const PASS = 1600;
+
+    const sweep = () => {
+      if (!root.isConnected) return;
+      const box = root.getBoundingClientRect();
+      const ys = [...cols[0].children].map((b) => { const r = b.getBoundingClientRect(); return r.top + r.height / 2 - box.top; });
+      // Sweep only the rows above the headline, where the beam is visible.
+      const kicker = root.parentElement!.querySelector('.kicker');
+      const limit = kicker ? kicker.getBoundingClientRect().top - box.top - 20 : box.height;
+      let pool = ys.map((_, i) => i).filter((i) => ys[i] < limit);
+      if (pool.length < 3) pool = ys.map((_, i) => i);
+      const fresh = pool.filter((i) => !recent.includes(i));
+      const r = (fresh.length ? fresh : pool)[Math.floor(Math.random() * (fresh.length || pool.length))];
+      recent.push(r); if (recent.length > Math.min(4, pool.length - 1)) recent.shift();
+      const y = ys[r];
+      beam.style.top = glow.style.top = `${y}px`;
+      beam.animate([{ opacity: 0 }, { opacity: 1, offset: .15 }, { opacity: 1, offset: .7 }, { opacity: 0 }], { duration: PASS + 600, easing: 'ease-out' });
+      beam.firstElementChild!.animate([{ transform: 'translateX(-100%)' }, { transform: 'translateX(300%)' }], { duration: PASS, easing: 'cubic-bezier(.45,.05,.35,1)' });
+      glow.animate([{ opacity: 0 }, { opacity: 1, offset: .3 }, { opacity: 0 }], { duration: PASS + 900 });
+      // Tick each column as the head reaches it.
+      cols.forEach((col) => {
+        if (!col.offsetParent) return;
+        const bar = col.children[r] as HTMLElement;
+        const x = col.getBoundingClientRect().left - box.left;
+        const at = (x / box.width) * PASS * 0.75;
+        window.setTimeout(() => {
+          bar.classList.add('hit');
+          const tag = document.createElement('span');
+          tag.className = 'scan-tag';
+          tag.textContent = '✓ ' + tags[t++ % tags.length];
+          tag.style.top = `${y}px`;
+          tag.style.left = `${x}px`;
+          root.appendChild(tag);
+          window.setTimeout(() => { bar.classList.remove('hit'); tag.classList.add('out'); }, 2400);
+          window.setTimeout(() => tag.remove(), 3400);
+        }, at);
+      });
+      timer = window.setTimeout(sweep, 2800);
+    };
+    timer = window.setTimeout(sweep, 700);
+  }
+  document.addEventListener('astro:page-load', start);
+  document.addEventListener('astro:before-swap', () => window.clearTimeout(timer));
+</script>
