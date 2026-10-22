@@ -1,7 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
 import LegalCode from '../components/LegalCode.astro';
-import Embers from '../components/Embers.astro';
 import Arrow from '../components/Arrow.astro';
 import { totals } from '../data/projects';
 const k = Math.floor(totals.pledged / 1000);
@@ -20,7 +19,6 @@ const k = Math.floor(totals.pledged / 1000);
     <a class="half games" href="/games">
       <img class="bg" src="/art/odsire/ortahisar-dusk.webp" alt="" fetchpriority="high">
       <span class="shade"></span>
-      <Embers />
       <span class="kicker">II · Games</span>
       <span class="who">
         <span class="display">The<br><em>producer</em></span>
