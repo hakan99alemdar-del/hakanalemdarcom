@@ -1,6 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
-import GridLines from '../components/GridLines.astro';
+import LegalCode from '../components/LegalCode.astro';
 import Arrow from '../components/Arrow.astro';
 import { totals } from '../data/projects';
 const k = Math.floor(totals.pledged / 1000);
@@ -8,7 +8,7 @@ const k = Math.floor(totals.pledged / 1000);
 <Base side="home" title="Hakan Alemdar · Tech lawyer and games producer" description={`Attorney and LL.M. candidate in Digitalization and Law, and co-founder of two tabletop RPG studios with $${k}K+ raised on Kickstarter.`}>
   <div class="split">
     <a class="half law" href="/law">
-      <GridLines />
+      <LegalCode avoid=".half.law .kicker, .half.law .who, .half.law .enter, .badge-name" />
       <span class="kicker">I · Law &amp; Tech</span>
       <span class="who">
         <span class="display">The<br><em>lawyer</em></span>

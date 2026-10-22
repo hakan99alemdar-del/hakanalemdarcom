@@ -10,7 +10,7 @@ const latest = (await posts('law')).slice(0, 3);
 ---
 <Base side="law" title="Hakan Alemdar · Attorney, LL.M. Digitalization & Law" description="Attorney at the Istanbul Bar and LL.M. candidate in Digitalization and Law in Würzburg. Data protection, AI regulation, IP licensing and cross-border contracts. Based in Frankfurt am Main.">
   <section class="hero law" id="top">
-    <LegalCode />
+    <LegalCode avoid=".hero.law .kicker, .hero.law .display, .hero.law .hero-foot" />
     <div class="wrap hero-body">
       <div class="kicker">Attorney, Istanbul Bar · LL.M. candidate · Frankfurt am Main</div>
       <h1 class="display" transition:name="headline">Law for<br>digital things</h1>

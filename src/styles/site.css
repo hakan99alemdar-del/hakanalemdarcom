@@ -67,6 +67,10 @@ a:hover { color: var(--acc-ink); }
 /* Law hero: code streaming left to right, with neon rule names */
 .code-rain { position: absolute; top: 96px; left: 0; width: 100%; height: calc(100% - 96px); pointer-events: none; -webkit-mask-image: linear-gradient(90deg, rgba(0,0,0,.5), #000 30%); mask-image: linear-gradient(90deg, rgba(0,0,0,.5), #000 30%); }
 @media (max-width: 760px) { .code-rain { top: 128px; height: calc(100% - 128px); } }
+/* Wider than the panel so the stream doesn't reset when the panel grows on hover. */
+.half.law .who, .hero.law .hero-body { align-items: flex-start; }
+.hero.law .hero-foot { align-self: stretch; }
+.half .code-rain { position: absolute; top: 0; left: 0; width: max(100%, 75vw); height: 100%; -webkit-mask-image: none; mask-image: none; }
 .hero-body { position: relative; width: 100%; margin-top: auto; padding-bottom: 48px; display: flex; flex-direction: column; gap: 24px; padding-top: 140px; }
 .hero-body .display { font-size: clamp(64px, 14.5vw, 200px); }
 .hero.law .hero-body .display { font-size: clamp(52px, 8vw, 116px); }

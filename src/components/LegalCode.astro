@@ -1,10 +1,13 @@
 ---
-// Law hero backdrop: streams of code flowing left to right, with the rules
-// I work on flaring up between them like neon signs.
+// Law backdrop: streams of code flowing left to right, with the rules I work
+// on flaring up between them like neon signs. `avoid` names the text the
+// streams dim behind and the signs keep clear of.
+interface Props { avoid: string; }
+const { avoid } = Astro.props;
 const tags = ['GDPR · Art. 28', 'AI Act · Art. 50', 'UrhG · § 31', 'DSA · Art. 14', 'Data Act', 'TDDDG · § 25',
   'BGB · § 327', 'AI Act · Annex III', 'GDPR · Art. 44', 'Licence scope', 'NIS2', 'GDPR · Art. 6'];
 ---
-<canvas class="code-rain" aria-hidden="true" data-tags={JSON.stringify(tags)}></canvas>
+<canvas class="code-rain" aria-hidden="true" data-tags={JSON.stringify(tags)} data-avoid={avoid}></canvas>
 
 <script>
   const GLYPHS = '01{}[]()<>=;:#$%&*+-/|_.abcdef0123456789§ABCDEFxyz';
@@ -20,7 +23,8 @@ const tags = ['GDPR · Art. 28', 'AI Act · Art. 50', 'UrhG · § 31', 'DSA · A
     const tags: string[] = JSON.parse(cv.dataset.tags!);
     const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
     const CW = 9, RH = 22, MONO = 'ui-monospace, SFMono-Regular, Menlo, Consolas, monospace';
-    let w = 0, h = 0, cols = 0, rows = 0, limit = 0;
+    let w = 0, h = 0, cols = 0, rows = 0, vis = 0;
+    let boxes: { l: number; t: number; r: number; b: number }[] = [];
     let grid: string[][] = [];
     let streams: { row: number; head: number; len: number; every: number }[] = [];
     let signs: { row: number; col: number; text: string; t0: number }[] = [];
@@ -40,10 +44,18 @@ const tags = ['GDPR · Art. 28', 'AI Act · Art. 50', 'UrhG · § 31', 'DSA · A
         const n = 2 + Math.floor(Math.random() * 2);
         for (let i = 0; i < n; i++) streams.push(spawn(r, Math.floor(Math.random() * cols * 1.3)));
       }
-      // Neon signs only light up in the open space above the headline.
-      const kicker = cv.parentElement!.querySelector('.kicker');
-      limit = kicker ? kicker.getBoundingClientRect().top - cv.getBoundingClientRect().top - RH : h;
+      measure();
     };
+    // Text boxes in canvas coordinates, and the width actually on screen.
+    const measure = () => {
+      const o = cv.getBoundingClientRect(), p = cv.parentElement!.getBoundingClientRect();
+      vis = Math.min(w, p.right - o.left);
+      boxes = [...document.querySelectorAll(cv.dataset.avoid!)].map((e) => {
+        const r = e.getBoundingClientRect();
+        return { l: r.left - o.left, t: r.top - o.top, r: r.right - o.left, b: r.bottom - o.top };
+      });
+    };
+    const hits = (l: number, t: number, r: number, b: number) => boxes.some((x) => l < x.r && r > x.l && t < x.b && b > x.t);
 
     let tick = 0, last = 0, nextSign = 600;
     const draw = (now: number) => {
@@ -52,10 +64,10 @@ const tags = ['GDPR · Art. 28', 'AI Act · Art. 50', 'UrhG · § 31', 'DSA · A
       ctx.textBaseline = 'middle';
       for (const s of streams) {
         const y = s.row * RH + RH / 2;
-        const dim = y < limit ? 1 : 0.22;
         for (let k = 0; k < s.len; k++) {
           const c = s.head - k;
           if (c < 0 || c >= cols) continue;
+          const dim = hits(c * CW, y - 2, c * CW + CW, y + 2) ? 0.22 : 1;
           const a = k === 0 ? 0.9 : 0.4 * (1 - k / s.len);
           ctx.fillStyle = k === 0 ? `rgba(220,230,255,${a * dim})` : `rgba(140,170,255,${a * dim})`;
           ctx.fillText(grid[s.row][c], c * CW, y);
@@ -86,6 +98,7 @@ const tags = ['GDPR · Art. 28', 'AI Act · Art. 50', 'UrhG · § 31', 'DSA · A
       raf = requestAnimationFrame(step);
       if (now - last < 33) return;
       last = now;
+      if (tick % 15 === 0) measure();
       if (++tick % 2 === 0) {
         for (const s of streams) {
           if (tick % (s.every * 2) === 0) s.head++;
@@ -95,14 +108,16 @@ const tags = ['GDPR · Art. 28', 'AI Act · Art. 50', 'UrhG · § 31', 'DSA · A
       }
       signs = signs.filter((s) => now - s.t0 < 2800);
       if (now > nextSign && signs.length < 2) {
-        const free = Math.floor(limit / RH);
         const text = tags[Math.floor(Math.random() * tags.length)].toUpperCase();
-        if (free > 0) {
-          const row = Math.floor(Math.random() * free);
-          if (!signs.some((s) => Math.abs(s.row - row) < 2)) {
-            const col = Math.floor(Math.random() * Math.max(1, cols - text.length - 4)) + 2;
-            signs.push({ row, col, text, t0: now });
-          }
+        const span = Math.ceil(text.length * 8.6 / CW) + 3, fit = Math.floor(vis / CW) - span - 2;
+        // Try a few spots in open space, clear of text and of other signs.
+        for (let i = 0; i < 16 && fit > 0; i++) {
+          const row = Math.floor(Math.random() * rows), col = 2 + Math.floor(Math.random() * fit);
+          const x = col * CW, y = row * RH;
+          if (y + RH > h || hits(x - 24, y - 12, x + span * CW + 24, y + RH + 12)) continue;
+          if (signs.some((s) => Math.abs(s.row - row) < 3)) continue;
+          signs.push({ row, col, text, t0: now });
+          break;
         }
         nextSign = now + 900 + Math.random() * 900;
       }
@@ -111,8 +126,8 @@ const tags = ['GDPR · Art. 28', 'AI Act · Art. 50', 'UrhG · § 31', 'DSA · A
 
     resize();
     if (still) {
-      signs = [{ row: 1, col: Math.floor(cols * 0.55), text: tags[0].toUpperCase(), t0: -1000 }];
-      draw(0);
+      last = -100; nextSign = -1; step(0); cancelAnimationFrame(raf);
+      signs.forEach((g) => { g.t0 = -1000; }); draw(0);
       return;
     }
     new IntersectionObserver(([e]) => {
