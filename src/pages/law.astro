@@ -1,0 +1,102 @@
+---
+import Base from '../layouts/Base.astro';
+import GridLines from '../components/GridLines.astro';
+import Arrow from '../components/Arrow.astro';
+import { focus, roadmap, experience, education, skills } from '../data/law';
+const ticker = focus.map((f) => f.title);
+---
+<Base side="law" title="Hakan Alemdar · Attorney, LL.M. Digitalization & Law" description="Turkish-qualified attorney and LL.M. candidate in Digitalization and Law in Würzburg. Data protection, AI regulation, IP licensing and cross-border contracts. Based in Frankfurt am Main.">
+  <section class="hero" id="top">
+    <GridLines />
+    <div class="wrap hero-body">
+      <div class="kicker">Attorney · LL.M. candidate · Frankfurt am Main</div>
+      <h1 class="display" transition:name="headline">Law for<br>digital things</h1>
+      <div class="hero-foot">
+        <p>Turkish-qualified lawyer studying Digitalization and Law at the University of Würzburg. I work on data protection, AI regulation, IP licensing and cross-border contracts.</p>
+        <div class="btns">
+          <a class="btn" href="mailto:hakan99alemdar@gmail.com">Email me</a>
+          <a class="btn ghost" href="#focus">Scroll <Arrow dir="down" /></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="ticker" aria-hidden="true">
+    <div class="ticker-track">
+      {[...ticker, ...ticker, ...ticker, ...ticker].map((t) => <span>{t} ·</span>)}
+    </div>
+  </div>
+
+  <section class="sec wrap" id="focus">
+    <div class="sec-head rv">
+      <h2 class="display">What I<br>work on</h2>
+      <p>Four areas where my practice, my LL.M. modules and my work as a studio founder overlap.</p>
+    </div>
+    <div class="focus rv">
+      {focus.map((f, i) => (
+        <div><span class="num">0{i + 1}</span><code>{f.code.toUpperCase()}</code><h3>{f.title}</h3><p>{f.text}</p></div>
+      ))}
+    </div>
+  </section>
+
+  <section class="sec wrap">
+    <div class="sec-head rv"><h2 class="display">LL.M. roadmap</h2><p>Digitalization and Law, Julius-Maximilians-Universität Würzburg.</p></div>
+    <ol class="road rv">
+      {roadmap.map((r) => (
+        <li class={r.state}><b>{r.term} · {r.state}</b><span>{r.text}</span></li>
+      ))}
+    </ol>
+  </section>
+
+  <section class="sec wrap" id="experience">
+    <div class="sec-head rv"><h2 class="display">Experience</h2><p>Open a row for details.</p></div>
+    <div class="jobs rv">
+      {experience.map((e, i) => {
+        const [org, place] = e.org.split(' · ');
+        return (
+          <details open={i === 0}>
+            <summary><time>{e.when}</time><span class="org">{org}</span><span class="role">{e.role}{place && `, ${place}`}</span><span class="sign" aria-hidden="true">+</span></summary>
+            <p>{e.text}</p>
+          </details>
+        );
+      })}
+    </div>
+  </section>
+
+  <section class="sec wrap">
+    <div class="cols rv">
+      <div>
+        <h2 class="display">Education</h2>
+        {education.map((e) => <div class="item"><small>{e.when}</small><strong>{e.title}</strong><span>{e.org}</span></div>)}
+      </div>
+      <div>
+        <h2 class="display">Skills</h2>
+        {skills.map(([k, v]) => <div class="item"><small>{k}</small><span>{v}</span></div>)}
+      </div>
+    </div>
+  </section>
+
+  <section class="sec wrap">
+    <a class="bridge warm rv" href="/games">
+      <div>
+        <span class="kicker">Where they meet</span>
+        <span class="display">Games law</span>
+        <p>Licensing art and IP, platform terms, consumer law for digital goods, and AI-generated assets under the AI Act. I mentored game founders on company setup at OGEM, Istanbul’s municipal game incubator, and I’m building my LL.M. thesis around this field.</p>
+        <span class="go">See the games side →</span>
+      </div>
+      <img src="/art/odsire/ortahisar-dusk.webp" alt="Ortahisar at dusk, key art from Odsire" loading="lazy">
+    </a>
+  </section>
+
+  <section class="wrap contact" id="contact">
+    <h2 class="display rv">Let’s talk</h2>
+    <div class="btns">
+      <a class="btn" href="mailto:hakan99alemdar@gmail.com">hakan99alemdar@gmail.com</a>
+      <a class="btn ghost" href="https://www.linkedin.com/in/hakanalemdar">LinkedIn</a>
+    </div>
+    <footer class="foot">
+      <span>Based in Frankfurt am Main. Open to IT, IP and compliance roles in Germany or remote.</span>
+      <span>© 2026 Hakan Alemdar</span>
+    </footer>
+  </section>
+</Base>

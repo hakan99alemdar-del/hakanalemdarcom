@@ -1,12 +1,13 @@
 ---
 import { ClientRouter } from 'astro:transitions';
 import '../styles/site.css';
-import Switch from '../components/Switch.astro';
-import Bridge from '../components/Bridge.astro';
 
-interface Props { side: 'law' | 'games'; title: string; description: string; }
+interface Props { side: 'home' | 'law' | 'games'; title: string; description: string; }
 const { side, title, description } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site);
+const links = side === 'games'
+  ? [['#studios', 'Studios'], ['#art', 'Art'], ['#contact', 'Contact']]
+  : [['#focus', 'Focus'], ['#experience', 'Experience'], ['#contact', 'Contact']];
 ---
 <!doctype html>
 <html lang="en">
@@ -20,26 +21,88 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
   <meta property="og:description" content={description}>
   <meta property="og:type" content="profile">
   <meta property="og:url" content={canonical}>
+  <meta name="theme-color" content={side === 'games' ? '#0B0907' : '#0A0F1A'}>
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Newsreader:opsz,wght@6..72,400..700&family=JetBrains+Mono:wght@400;600&family=IM+Fell+English+SC&family=Alegreya:wght@400;600;800&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600&display=swap">
   <ClientRouter />
 </head>
 <body data-side={side}>
-  <div class="bar">
-    <div class="wrap">
-      <a class="name" href="/">Hakan Alemdar</a>
-      <Switch side={side} />
-    </div>
-  </div>
-  <main class="wrap">
+  {side !== 'home' && (
+    <header class="top">
+      <div class="wrap">
+        <a class="name" href="/">HAKAN ALEMDAR</a>
+        <nav aria-label="Main">
+          {links.map(([href, label]) => <a class="sec-link" href={href}>{label}</a>)}
+          <span class="sep" aria-hidden="true"></span>
+          <a class="side" href="/law" aria-current={side === 'law' ? 'page' : undefined}>Law &amp; Tech</a>
+          <a class="side" href="/games" aria-current={side === 'games' ? 'page' : undefined}>Games</a>
+        </nav>
+      </div>
+    </header>
+  )}
+  <main>
     <slot />
-    <Bridge />
-    <footer>
-      <div>Write to me: <a href="mailto:hakan99alemdar@gmail.com">hakan99alemdar@gmail.com</a> · <a href="https://www.linkedin.com/in/hakanalemdar">LinkedIn</a></div>
-      <div>Based in Frankfurt am Main. Open to IT, IP and compliance roles in Germany or remote. © 2026 Hakan Alemdar</div>
-    </footer>
   </main>
 </body>
 </html>
+
+<script>
+  function reveal() {
+    const els = document.querySelectorAll<HTMLElement>('.rv');
+    if (!('IntersectionObserver' in window)) { els.forEach((e) => e.classList.add('in')); return; }
+    const io = new IntersectionObserver((entries) => entries.forEach((en) => {
+      if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); }
+    }), { rootMargin: '0px 0px -8% 0px' });
+    els.forEach((e) => io.observe(e));
+  }
+  function countUp() {
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const els = document.querySelectorAll<HTMLElement>('[data-count]');
+    const io = new IntersectionObserver((entries) => entries.forEach((en) => {
+      if (!en.isIntersecting) return;
+      io.unobserve(en.target);
+      const el = en.target as HTMLElement;
+      const end = Number(el.dataset.count), pre = el.dataset.pre ?? '', suf = el.dataset.suf ?? '';
+      const t0 = performance.now();
+      const step = (t: number) => {
+        const p = Math.min(1, (t - t0) / 1400);
+        el.textContent = pre + Math.round(end * (1 - (1 - p) ** 3)).toLocaleString('en-US') + suf;
+        if (p < 1) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    }));
+    els.forEach((e) => io.observe(e));
+  }
+  let timer: number | undefined;
+  function slides() {
+    window.clearInterval(timer);
+    const tabs = [...document.querySelectorAll<HTMLButtonElement>('.tabs button')];
+    if (!tabs.length) return;
+    const pics = document.querySelectorAll('.slide'), texts = document.querySelectorAll('.slide-text');
+    let cur = 0;
+    const show = (i: number) => {
+      cur = i;
+      tabs.forEach((t, k) => t.setAttribute('aria-selected', String(k === i)));
+      pics.forEach((p, k) => p.classList.toggle('on', k === i));
+      texts.forEach((p, k) => p.classList.toggle('on', k === i));
+    };
+    tabs.forEach((t, i) => t.addEventListener('click', () => { window.clearInterval(timer); show(i); }));
+    if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      timer = window.setInterval(() => show((cur + 1) % tabs.length), 7000);
+    }
+  }
+  function gallery() {
+    const box = document.getElementById('lightbox') as HTMLDialogElement | null;
+    if (!box) return;
+    const img = document.getElementById('lightbox-img') as HTMLImageElement;
+    const cap = document.getElementById('lightbox-title') as HTMLElement;
+    document.querySelectorAll<HTMLButtonElement>('[data-full]').forEach((b) => b.addEventListener('click', () => {
+      img.src = b.dataset.full ?? ''; img.alt = b.dataset.title ?? ''; cap.textContent = b.dataset.title ?? '';
+      box.showModal();
+    }));
+    box.addEventListener('click', (e) => { if (e.target === box) box.close(); });
+  }
+  document.addEventListener('astro:page-load', () => { reveal(); countUp(); slides(); gallery(); });
+</script>

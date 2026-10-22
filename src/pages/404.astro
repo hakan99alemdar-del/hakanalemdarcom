@@ -1,10 +1,14 @@
 ---
 import Base from '../layouts/Base.astro';
+import GridLines from '../components/GridLines.astro';
 ---
 <Base side="law" title="Page not found · Hakan Alemdar" description="This page does not exist.">
-  <header class="hero">
-    <div class="eyebrow">404</div>
-    <h1>No such page.</h1>
-    <p class="actions"><a href="/">Law &amp; Tech</a><a href="/games">Games</a></p>
-  </header>
+  <section class="hero">
+    <GridLines />
+    <div class="wrap hero-body">
+      <div class="kicker">404</div>
+      <h1 class="display">No such page</h1>
+      <div class="btns"><a class="btn" href="/">Start</a><a class="btn ghost" href="/law">Law &amp; Tech</a><a class="btn ghost" href="/games">Games</a></div>
+    </div>
+  </section>
 </Base>

@@ -1,59 +1,153 @@
 ---
 import Base from '../layouts/Base.astro';
-import Showcase from '../components/Showcase.astro';
+import Arrow from '../components/Arrow.astro';
 import { studios, totals, stripArt } from '../data/projects';
 const k = (n: number) => Math.floor(n / 1000);
-const headline = 'Worlds from history and myth, funded by backers.';
+const usd = (n: number) => '$' + n.toLocaleString('en-US');
+const year = (s?: string) => s?.split(' ').pop();
 const partners = ['Kickstarter', 'BackerKit', 'Grim Golem', 'Grimcraft Games', 'OGEM Istanbul'];
+
+// Full-bleed art for each project in the hero; the books without key art use their print photo.
+const heroArt: Record<string, string> = {
+  odsire: '/art/odsire/ortahisar-dusk.webp',
+  yatagan: '/art/yatagan/cover.webp',
+  crusades: '/art/crusades/citadel-of-saladin.webp',
+  'silk-road': '/art/books/silk-road.webp',
+  seekers: '/art/crescent/lunar-eclipse.webp',
+  wayfarer: '/art/books/wayfarer.webp',
+};
+const short: Record<string, string> = { odsire: 'Odsire', yatagan: 'Yatagan', crusades: 'Crusades', 'silk-road': 'Silk Road', seekers: 'Crescent', wayfarer: 'Wayfarer' };
+const slides = studios.flatMap((s) => s.projects.map((p) => ({ ...p, studio: s.name })));
+const [vv, metis] = studios;
+const [odsire, yatagan] = vv.projects;
+const wide = new Set([0, 4, 9]);
 ---
 <Base side="games" title="Hakan Alemdar · Producer of tabletop RPGs" description={`Co-founder and producer of tabletop RPGs: ${totals.campaigns} Kickstarter campaigns, $${k(totals.pledged)}K+ raised from ${totals.backers.toLocaleString('en-US')} backers.`}>
-  <header class="hero hero-art">
-    <div class="eyebrow">Producer · Co-founder · Istanbul &amp; New York</div>
-    <h1 transition:name="headline" class="reveal" aria-label={headline}>{headline.split(' ').map((w, i) => <><span aria-hidden="true" style={`--i:${i}`}>{w}</span>{' '}</>)}</h1>
-    <p class="lede">I co-founded two studios that make tabletop roleplaying games and ran the business side: the US companies, licensing and vendor contracts, and the supply chain that got books to backers.</p>
-    <p class="actions"><a href="/">← My day job: tech law</a></p>
-  </header>
-
-  <div class="marquee" aria-label="Key art from Odsire and Historica Arcanum">
-    <ul class="marquee-track">
-      {[...stripArt, ...stripArt].map(([slug, title], i) => (
-        <li aria-hidden={i >= stripArt.length ? 'true' : undefined}>
-          <button type="button" class="shot" tabindex={i >= stripArt.length ? -1 : undefined} data-full={`/art/${slug}.webp`} data-title={title} aria-label={`Open ${title}`}>
-            <img src={`/art/${slug}-sm.webp`} alt="" width="640" height="338" decoding="async">
-            <span>{title}</span>
-          </button>
-        </li>
+  <section class="hero games" id="top">
+    <div class="slides" aria-hidden="true">
+      {slides.map((p, i) => (
+        <div class:list={['slide', { on: i === 0 }]}><img src={heroArt[p.slug]} alt="" fetchpriority={i === 0 ? 'high' : undefined} loading={i === 0 ? undefined : 'lazy'}></div>
       ))}
-    </ul>
-  </div>
-  <p class="src marquee-note">Art from <em>Odsire</em> (© Vernal Voyage) and <em>Historica Arcanum</em> (© Metis Creative), shown with permission. Click to enlarge.</p>
-
-  <section class="block">
-    <h2>By the numbers</h2>
-    <div>
-      <div class="stats">
-        <div class="stat"><b data-count={k(totals.pledged)} data-pre="$" data-suf="K+">${k(totals.pledged)}K+</b><span>raised on Kickstarter</span></div>
-        <div class="stat"><b data-count={totals.backers}>{totals.backers.toLocaleString('en-US')}</b><span>backers</span></div>
-        <div class="stat"><b data-count={totals.campaigns}>{totals.campaigns}</b><span>funded campaigns, all past goal</span></div>
-      </div>
-      <p class="src">Totals from the public campaign pages, October 2026.</p>
+    </div>
+    <div class="wrap hero-body">
+      {slides.map((p, i) => (
+        <div class:list={['slide-text', { on: i === 0 }]} id={`slide-${i}`} role="tabpanel">
+          <div class="kicker">{p.studio} · {p.platform} · {p.pledged ? `${usd(p.pledged)} raised` : p.status}</div>
+          {i === 0
+            ? <h1 class="display" transition:name="headline">{short[p.slug]}</h1>
+            : <h2 class="display">{short[p.slug]}</h2>}
+          <p>{p.blurb}</p>
+          <div class="btns">
+            <a class="btn" href={p.url}>{p.pledged ? 'See the campaign' : 'Follow the launch'} <Arrow /></a>
+            <span class="count">0{i + 1} / 0{slides.length}</span>
+          </div>
+        </div>
+      ))}
+    </div>
+    <div class="tabs" role="tablist" aria-label="Projects">
+      {slides.map((p, i) => (
+        <button type="button" role="tab" aria-selected={i === 0 ? 'true' : 'false'} aria-controls={`slide-${i}`}>{p.title.replace('Historica Arcanum: ', '')}</button>
+      ))}
     </div>
   </section>
 
-  {studios.map((s) => (
-    <section class="studio-band">
-      <header class="studio-head">
-        <div class="eyebrow">{s.role} · {s.years}</div>
-        <h2>{s.name}</h2>
-        <p>{s.note}</p>
-      </header>
-      {s.projects.map((p) => <Showcase p={p} />)}
-    </section>
-  ))}
+  <section class="sec wrap">
+    <div class="stats rv">
+      <div><b data-count={k(totals.pledged)} data-pre="$" data-suf="K+">${k(totals.pledged)}K+</b><span>raised on Kickstarter</span></div>
+      <div><b data-count={totals.backers}>{totals.backers.toLocaleString('en-US')}</b><span>backers</span></div>
+      <div><b data-count={totals.campaigns}>{totals.campaigns}</b><span>funded campaigns, all past goal</span></div>
+      <div><b>2</b><span>studios co-founded</span></div>
+    </div>
+    <p class="src">Totals from the public campaign pages, October 2026.</p>
+  </section>
 
-  <section class="block">
-    <h2>Worked with</h2>
-    <ul class="partners">{partners.map((n) => <li>{n}</li>)}</ul>
+  <section class="sec wrap" id="studios">
+    <header class="studio-head rv">
+      <h2 class="display">{vv.name}</h2>
+      <p>{vv.role} · {vv.years}. {vv.note}</p>
+    </header>
+    <article class="feature rv">
+      <img src="/art/odsire/ruhimancer.webp" alt="Ruhimancer, key art from Odsire" loading="lazy">
+      <div class="feature-body">
+        <div>
+          <span class="kicker">{odsire.platform} · Ended {odsire.ended}</span>
+          <h3>{odsire.title}</h3>
+          <p>{odsire.blurb}</p>
+          <p class="role">{odsire.role}</p>
+          <a href={odsire.url}>See the campaign →</a>
+        </div>
+        <div class="nums">
+          <div><b>{usd(odsire.pledged!)}</b><span>{Math.round(odsire.pledged! / odsire.goal!)}× the {usd(odsire.goal!)} goal</span></div>
+          <div><b>{odsire.backers}</b><span>backers</span></div>
+        </div>
+      </div>
+    </article>
+    <article class="duo rv">
+      <img src={yatagan.art.cover} alt={`${yatagan.title} cover art`} loading="lazy">
+      <div>
+        <span class="kicker">{yatagan.platform} · {yatagan.status}</span>
+        <h3>Yatagan</h3>
+        <p>{yatagan.blurb}</p>
+        <p class="role">{yatagan.role}</p>
+        <a href={yatagan.url}>Follow the launch →</a>
+      </div>
+    </article>
+  </section>
+
+  <section class="sec wrap">
+    <header class="studio-head rv">
+      <h2 class="display">{metis.name}</h2>
+      <p>{metis.role} · {metis.years}. {metis.note}</p>
+    </header>
+    <div class="tiles">
+      {metis.projects.map((p) => (
+        <a class="tile rv" href={p.url}>
+          <span class="ph"><img src={p.art.cover} alt={`${p.title}, printed books`} loading="lazy"></span>
+          <span class="meta">{p.ended} · {usd(p.pledged!)} · {p.backers?.toLocaleString('en-US')} backers</span>
+          <h3>{p.title.replace('Historica Arcanum: ', '')}</h3>
+          <p>{p.blurb}</p>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <section class="sec" id="art">
+    <div class="wrap sec-head rv"><h2 class="display">From the books</h2><p>Art from Odsire (© Vernal Voyage) and Historica Arcanum (© Metis Creative), shown with permission. Click to enlarge.</p></div>
+    <div class="wall">
+      {stripArt.map(([slug, title], i) => (
+        <button type="button" class:list={{ wide: wide.has(i) }} data-full={`/art/${slug}.webp`} data-title={title} aria-label={`Open ${title}`}>
+          <img src={`/art/${slug}${wide.has(i) ? '' : '-sm'}.webp`} alt="" loading="lazy" decoding="async">
+          <span>{title}</span>
+        </button>
+      ))}
+    </div>
+  </section>
+
+  <section class="sec wrap">
+    <ul class="partners rv"><li>Worked with</li>{partners.map((n) => <li>{n}</li>)}</ul>
+  </section>
+
+  <section class="sec wrap">
+    <a class="bridge cool rv" href="/law">
+      <div>
+        <span class="kicker">The other side</span>
+        <span class="display">My day job: tech law</span>
+        <p>Attorney and LL.M. candidate in Digitalization and Law. Data protection, AI regulation, IP licensing and cross-border contracts.</p>
+        <span class="go">Law &amp; Tech →</span>
+      </div>
+    </a>
+  </section>
+
+  <section class="wrap contact" id="contact">
+    <h2 class="display rv">Let’s make one</h2>
+    <div class="btns">
+      <a class="btn" href="mailto:hakan99alemdar@gmail.com">hakan99alemdar@gmail.com</a>
+      <a class="btn ghost" href="https://www.linkedin.com/in/hakanalemdar">LinkedIn</a>
+    </div>
+    <footer class="foot">
+      <span>Producer · Co-founder · Istanbul &amp; New York</span>
+      <span>© 2026 Hakan Alemdar</span>
+    </footer>
   </section>
 
   <dialog class="lightbox" id="lightbox">
@@ -62,35 +156,3 @@ const partners = ['Kickstarter', 'BackerKit', 'Grim Golem', 'Grimcraft Games', '
     <p id="lightbox-title"></p>
   </dialog>
 </Base>
-
-<script>
-  function countUp() {
-    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    document.querySelectorAll<HTMLElement>('[data-count]').forEach((el) => {
-      const end = Number(el.dataset.count), pre = el.dataset.pre ?? '', suf = el.dataset.suf ?? '';
-      const t0 = performance.now();
-      const step = (t: number) => {
-        const p = Math.min(1, (t - t0) / 1200);
-        el.textContent = pre + Math.round(end * (1 - (1 - p) ** 3)).toLocaleString('en-US') + suf;
-        if (p < 1) requestAnimationFrame(step);
-      };
-      requestAnimationFrame(step);
-    });
-  }
-  function gallery() {
-    const box = document.getElementById('lightbox') as HTMLDialogElement | null;
-    if (!box) return;
-    const img = document.getElementById('lightbox-img') as HTMLImageElement;
-    const cap = document.getElementById('lightbox-title') as HTMLElement;
-    document.querySelectorAll<HTMLButtonElement>('.shot').forEach((b) => b.addEventListener('click', () => {
-      img.src = b.dataset.full ?? ''; img.alt = b.dataset.title ?? ''; cap.textContent = b.dataset.title ?? '';
-      box.showModal();
-    }));
-    box.addEventListener('click', (e) => { if (e.target === box) box.close(); });
-  }
-  document.addEventListener('astro:page-load', () => {
-    if (document.body.dataset.side !== 'games') return;
-    countUp();
-    gallery();
-  });
-</script>

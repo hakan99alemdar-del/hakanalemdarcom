@@ -1,57 +1,31 @@
 ---
 import Base from '../layouts/Base.astro';
-import { focus, roadmap, experience, education, skills } from '../data/law';
+import GridLines from '../components/GridLines.astro';
+import Arrow from '../components/Arrow.astro';
+import { totals } from '../data/projects';
+const k = Math.floor(totals.pledged / 1000);
 ---
-<Base side="law" title="Hakan Alemdar · Attorney, LL.M. Digitalization & Law" description="Turkish-qualified attorney and LL.M. candidate in Digitalization and Law in Würzburg. Data protection, AI regulation, IP licensing and cross-border contracts. Based in Frankfurt am Main.">
-  <header class="hero">
-    <div class="eyebrow">Attorney · LL.M. candidate · Frankfurt am Main</div>
-    <h1 transition:name="headline">Law for digital things.</h1>
-    <p class="lede">Turkish-qualified lawyer studying Digitalization and Law at the University of Würzburg. I work on data protection, AI regulation, IP licensing and cross-border contracts.</p>
-    <p class="actions"><a href="mailto:hakan99alemdar@gmail.com">Email me</a><a href="https://www.linkedin.com/in/hakanalemdar">LinkedIn</a><a href="/games">I also produce games →</a></p>
-  </header>
-
-  <section class="block">
-    <h2>Focus</h2>
-    <div class="cards">
-      {focus.map((f) => (
-        <div class="card"><code>{f.code}</code><h3>{f.title}</h3><p>{f.text}</p></div>
-      ))}
-    </div>
-  </section>
-
-  <section class="block">
-    <h2>LL.M. roadmap</h2>
-    <div>
-      <ol class="road" style="list-style:none;margin:0;padding-left:0;padding-top:22px">
-        {roadmap.map((r) => (
-          <li class:list={['stop', r.state]}><b>{r.term}{r.state === 'now' && ' · now'}</b><span>{r.text}</span></li>
-        ))}
-      </ol>
-    </div>
-  </section>
-
-  <section class="block">
-    <h2>Experience</h2>
-    <div class="timeline">
-      {experience.map((e) => (
-        <div class="row"><time>{e.when}</time><div><strong>{e.role}</strong><span class="org">{e.org}</span><p>{e.text}</p></div></div>
-      ))}
-    </div>
-  </section>
-
-  <section class="block">
-    <h2>Education</h2>
-    <div class="timeline">
-      {education.map((e) => (
-        <div class="row"><time>{e.when}</time><div><strong>{e.title}</strong><span class="org">{e.org}</span></div></div>
-      ))}
-    </div>
-  </section>
-
-  <section class="block">
-    <h2>Skills</h2>
-    <dl class="kv" style="margin:0">
-      {skills.map(([k, v]) => (<><dt>{k}</dt><dd>{v}</dd></>))}
-    </dl>
-  </section>
+<Base side="home" title="Hakan Alemdar · Tech lawyer and games producer" description={`Attorney and LL.M. candidate in Digitalization and Law, and co-founder of two tabletop RPG studios with $${k}K+ raised on Kickstarter.`}>
+  <div class="split">
+    <a class="half law" href="/law">
+      <GridLines />
+      <span class="kicker">I · Law &amp; Tech</span>
+      <span class="who">
+        <span class="display">The<br><em>lawyer</em></span>
+        <p>Attorney and LL.M. candidate in Digitalization and Law. Data protection, AI Act, IP and licensing.</p>
+      </span>
+      <span class="enter">Enter <Arrow /></span>
+    </a>
+    <a class="half games" href="/games">
+      <img class="bg" src="/art/odsire/ortahisar-dusk.webp" alt="" fetchpriority="high">
+      <span class="shade"></span>
+      <span class="kicker">II · Games</span>
+      <span class="who">
+        <span class="display">The<br><em>producer</em></span>
+        <p>Co-founder of two tabletop RPG studios. ${k}K+ raised from {totals.backers.toLocaleString('en-US')} backers.</p>
+      </span>
+      <span class="enter">Enter <Arrow /></span>
+    </a>
+    <div class="badge-name"><h1>Hakan<br>Alemdar</h1><span>Pick a side</span></div>
+  </div>
 </Base>
