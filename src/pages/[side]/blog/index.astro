@@ -1,0 +1,35 @@
+---
+import Base from '../../../layouts/Base.astro';
+import LegalCode from '../../../components/LegalCode.astro';
+import Posts from '../../../components/Posts.astro';
+import { posts } from '../../../data/blog';
+
+export function getStaticPaths() {
+  return [{ params: { side: 'law' } }, { params: { side: 'games' } }];
+}
+
+const side = Astro.params.side as 'law' | 'games';
+const list = await posts(side);
+const copy = side === 'law'
+  ? { kicker: 'Law & Tech', title: 'Writing on tech law', text: 'Notes on data protection, AI regulation, IP and licensing.' }
+  : { kicker: 'Games', title: 'From the studio', text: 'Notes on making, funding and shipping tabletop games.' };
+---
+<Base side={side} page="blog" title={`Blog · ${copy.kicker} · Hakan Alemdar`} description={copy.text}>
+  <section class:list={['page-head', side]}>
+    {side === 'law' ? <LegalCode avoid=".page-head.law .kicker, .page-head.law .display, .page-head.law p" /> : <img class="page-art" src="/art/odsire/ortahisar-dusk.webp" alt="">}
+    <div class="wrap">
+      <div class="kicker">Blog · {copy.kicker}</div>
+      <h1 class="display">{copy.title}</h1>
+      <p>{copy.text}</p>
+    </div>
+  </section>
+  <section class="wrap sec-tight">
+    <Posts list={list} />
+  </section>
+  <section class="wrap contact">
+    <footer class="foot">
+      <a href={`/${side}`}>← Back to {copy.kicker}</a>
+      <span>© 2026 Hakan Alemdar · <a href="/privacy">Privacy</a></span>
+    </footer>
+  </section>
+</Base>

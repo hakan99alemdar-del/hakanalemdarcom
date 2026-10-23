@@ -1,5 +1,5 @@
 ---
-# Copy this file, rename it (the file name becomes the URL, e.g. ai-act-and-game-art.md → /blog/ai-act-and-game-art),
+# Copy this file, rename it (the file name becomes the URL, e.g. ai-act-and-game-art.md → /law/blog/ai-act-and-game-art, or /games/blog/… for side: games),
 # and remove the leading underscore. Files starting with _ never appear on the site.
 title: Post title
 description: One or two sentences shown in the post list and in link previews.

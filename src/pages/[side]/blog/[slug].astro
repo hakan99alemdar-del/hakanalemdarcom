@@ -1,11 +1,11 @@
 ---
 import { render } from 'astro:content';
-import Base from '../../layouts/Base.astro';
-import Posts from '../../components/Posts.astro';
-import { posts, fmtDate, type Post } from '../../data/blog';
+import Base from '../../../layouts/Base.astro';
+import Posts from '../../../components/Posts.astro';
+import { posts, fmtDate, type Post } from '../../../data/blog';
 
 export async function getStaticPaths() {
-  return (await posts()).map((post) => ({ params: { slug: post.id }, props: { post } }));
+  return (await posts()).map((post) => ({ params: { side: post.data.side, slug: post.id }, props: { post } }));
 }
 
 interface Props { post: Post; }
@@ -19,7 +19,7 @@ const more = (await posts(side)).filter((p) => p.id !== post.id).slice(0, 3);
     <header class="page-head">
       {cover && <img class="page-cover" src={cover} alt="">}
       <div class="wrap">
-        <div class="kicker"><a href="/blog">Blog</a> · {side === 'law' ? 'Law & Tech' : 'Games'} · <time datetime={date.toISOString()}>{fmtDate(date)}</time></div>
+        <div class="kicker"><a href={`/${side}/blog`}>Blog · {side === 'law' ? 'Law & Tech' : 'Games'}</a> · <time datetime={date.toISOString()}>{fmtDate(date)}</time></div>
         <h1 class="display post-h1">{title}</h1>
         <p>{description}</p>
       </div>
@@ -30,7 +30,7 @@ const more = (await posts(side)).filter((p) => p.id !== post.id).slice(0, 3);
   </article>
   {more.length > 0 && (
     <section class="wrap sec">
-      <div class="sec-head"><h2 class="display">More posts</h2><p><a href="/blog">All posts →</a></p></div>
+      <div class="sec-head"><h2 class="display">More posts</h2><p><a href={`/${side}/blog`}>All posts →</a></p></div>
       <Posts list={more} />
     </section>
   )}
