@@ -115,12 +115,10 @@ const latest = (await posts('games')).slice(0, 3);
     </div>
   </section>
 
-  {latest.length > 0 && (
   <section class="sec wrap" id="blog">
     <div class="sec-head rv"><h2 class="display">From the blog</h2><p>Notes on making, funding and shipping tabletop games. <a href="/blog">All posts →</a></p></div>
     <div class="rv"><Posts list={latest} /></div>
   </section>
-  )}
 
   <section class="sec wrap">
     <ul class="partners rv"><li>Worked with</li>{partners.map((n) => <li>{n}</li>)}</ul>

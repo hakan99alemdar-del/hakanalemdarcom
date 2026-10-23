@@ -5,18 +5,14 @@ import '@fontsource/inter/400.css';
 import '@fontsource/inter/500.css';
 import '@fontsource/inter/600.css';
 import '../styles/site.css';
-import { posts } from '../data/blog';
 
 interface Props { side: 'home' | 'law' | 'games'; title: string; description: string; page?: 'blog' | 'privacy'; image?: string; }
 const { side, title, description, page, image } = Astro.props;
 const ogImage = new URL(image ?? `/og/${side}.jpg`, Astro.site);
-// The blog link stays hidden until the first post is out.
-const hasPosts = (await posts()).length > 0;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const links = side === 'games'
   ? [['/games#studios', 'Studios'], ['/blog', 'Blog'], ['/games#contact', 'Contact']]
   : [['/law#focus', 'Focus'], ['/law#experience', 'Experience'], ['/blog', 'Blog'], ['/law#contact', 'Contact']];
-const nav = links.filter(([href]) => hasPosts || href !== '/blog');
 const person = {
   '@context': 'https://schema.org',
   '@type': 'Person',
@@ -62,7 +58,7 @@ const person = {
       <div class="wrap">
         <a class="name" href="/">HAKAN ALEMDAR</a>
         <nav aria-label="Main">
-          {nav.map(([href, label]) => <a class:list={['sec-link', { keep: href === '/blog' }]} href={href} aria-current={page === 'blog' && href === '/blog' ? 'page' : undefined}>{label}</a>)}
+          {links.map(([href, label]) => <a class:list={['sec-link', { keep: href === '/blog' }]} href={href} aria-current={page === 'blog' && href === '/blog' ? 'page' : undefined}>{label}</a>)}
           <span class="sep" aria-hidden="true"></span>
           <a class="side" href="/law" aria-current={!page && side === 'law' ? 'page' : undefined}>Law &amp; Tech</a>
           <a class="side" href="/games" aria-current={!page && side === 'games' ? 'page' : undefined}>Games</a>
